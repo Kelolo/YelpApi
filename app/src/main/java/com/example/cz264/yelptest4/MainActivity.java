@@ -85,9 +85,10 @@ public class MainActivity extends AppCompatActivity {
                     ArrayList<Deal> deals = rmBusiness.deals();
                     String dealTitle = deals.get(rm.nextInt(deals.size())).title();
                     String dealInfo = deals.get(rm.nextInt(deals.size())).whatYouGet();
+                    String rating = rmBusiness.rating().toString();
 
 
-
+                    intent.putExtra("rating", rating);
                     intent.putExtra("name", rmBusiness.name());
                     intent.putExtra("imageUrl", rmBusiness.imageUrl());
                     intent.putExtra("dealTitle", dealTitle);

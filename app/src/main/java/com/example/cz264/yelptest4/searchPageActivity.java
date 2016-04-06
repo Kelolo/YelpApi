@@ -8,6 +8,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.method.LinkMovementMethod;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -35,12 +36,11 @@ public class searchPageActivity extends AppCompatActivity {
         TextView business_TitleTv = (TextView)findViewById(R.id.business_Title);
         TextView dealTitleTv = (TextView)findViewById(R.id.dealTitle);
         TextView dealInfoTv = (TextView)findViewById(R.id.dealInfo);
-
-
+        TextView ratingTv = (TextView)findViewById(R.id.ratingTv);
+        TextView dealLink = (TextView)findViewById(R.id.dealLink);
+        dealLink.setMovementMethod(LinkMovementMethod.getInstance());
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        //testTxt2 = (TextView)findViewById(R.id.testTxt2);
 
         Intent intent = getIntent();
 
@@ -48,17 +48,20 @@ public class searchPageActivity extends AppCompatActivity {
         final String imageUrl = intent.getStringExtra("imageUrl");
         String dealTitle = intent.getStringExtra("dealTitle");
         String dealInfo = intent.getStringExtra("dealInfo");
+        String rating = intent.getStringExtra("rating");
+
+        String[] spliter = dealInfo.split("<");
 
         business_TitleTv.setText(name);
         dealTitleTv.setText(dealTitle);
-        dealInfoTv.setText(dealInfo);
+        dealInfoTv.setText(spliter[0]);
+
+        dealLink.setText("<"+spliter[1]+"</a>");
+        ratingTv.setText("Rating: " + rating);
 
         final WebView business_ImageWv = (WebView)findViewById(R.id.business_Image);
 
         business_ImageWv.loadUrl(imageUrl);
-
-
-
     }
 
 
