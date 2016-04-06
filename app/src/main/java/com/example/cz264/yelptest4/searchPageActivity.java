@@ -19,13 +19,13 @@ import com.yelp.clientlib.entities.Business;
 
 import java.util.ArrayList;
 import java.util.Objects;
+import java.text.DecimalFormat;
+import java.math.RoundingMode;
 
 public class searchPageActivity extends AppCompatActivity {
 
-    private TextView testTxt2;
-    private boolean isDone = false;
-
-
+    //private TextView testTxt2;
+    //private boolean isDone = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +35,7 @@ public class searchPageActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         TextView business_TitleTv = (TextView)findViewById(R.id.business_Title);
         TextView dealTitleTv = (TextView)findViewById(R.id.dealTitle);
+        TextView distTv = (TextView)findViewById(R.id.distTv);
         TextView dealInfoTv = (TextView)findViewById(R.id.dealInfo);
         TextView ratingTv = (TextView)findViewById(R.id.ratingTv);
         TextView dealLink = (TextView)findViewById(R.id.dealLink);
@@ -50,6 +51,15 @@ public class searchPageActivity extends AppCompatActivity {
         String dealInfo = intent.getStringExtra("dealInfo");
         String rating = intent.getStringExtra("rating");
 
+        double userLatitude = Double.parseDouble(intent.getStringExtra("userLatitude"));
+        double userLongitude = Double.parseDouble(intent.getStringExtra("userLongitude"));
+        double busLatitude = Double.parseDouble(intent.getStringExtra("busLatitude"));
+        double busLongitude = Double.parseDouble(intent.getStringExtra("busLongitude"));
+
+        double dist = distance(userLatitude, userLongitude, busLatitude, busLongitude, "M");
+        DecimalFormat df2 = new DecimalFormat("#.0");
+        distTv.setText("Distance: " + df2.format(dist) + "m");
+
         String[] spliter = dealInfo.split("<");
 
         business_TitleTv.setText(name);
@@ -64,7 +74,29 @@ public class searchPageActivity extends AppCompatActivity {
         business_ImageWv.loadUrl(imageUrl);
     }
 
+    private static double distance(double lat1, double lon1, double lat2, double lon2, String unit) {
+        double theta = lon1 - lon2;
+        double dist = Math.sin(deg2rad(lat1)) * Math.sin(deg2rad(lat2)) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.cos(deg2rad(theta));
+        dist = Math.acos(dist);
+        dist = rad2deg(dist);
+        dist = dist * 60 * 1.1515;
+        if (unit == "K") {
+            dist = dist * 1.609344;
+        } else if (unit == "N") {
+            dist = dist * 0.8684;
+        }
 
+        return (dist);
+    }
+
+    private static double deg2rad(double deg) {
+        return (deg * Math.PI / 180.0);
+    }
+
+
+    private static double rad2deg(double rad) {
+        return (rad * 180 / Math.PI);
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

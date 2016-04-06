@@ -14,6 +14,8 @@ import com.yelp.clientlib.connection.YelpAPIFactory;
 import com.yelp.clientlib.entities.Business;
 import com.yelp.clientlib.entities.Deal;
 import com.yelp.clientlib.entities.SearchResponse;
+import com.yelp.clientlib.entities.options.BoundingBoxOptions;
+import com.yelp.clientlib.entities.options.BoundingBoxOptions.Builder;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -34,9 +36,9 @@ public class MainActivity extends AppCompatActivity {
     private Object lock;
     private ArrayList<Business> business;
     private Business rmBusiness;
-    private ArrayList<String> business_Name;
-    private ArrayList<Double> business_Distance;
-    private ArrayList<String> business_image;
+    private double userLatitude;
+    private double userLongitude;
+
     /**
      * for every business
      * ArrayList<Category> categories();
@@ -86,6 +88,8 @@ public class MainActivity extends AppCompatActivity {
                     String dealTitle = deals.get(rm.nextInt(deals.size())).title();
                     String dealInfo = deals.get(rm.nextInt(deals.size())).whatYouGet();
                     String rating = rmBusiness.rating().toString();
+                    double busLatitude = rmBusiness.location().coordinate().latitude();
+                    double busLongitude = rmBusiness.location().coordinate().longitude();
 
 
                     intent.putExtra("rating", rating);
@@ -93,6 +97,10 @@ public class MainActivity extends AppCompatActivity {
                     intent.putExtra("imageUrl", rmBusiness.imageUrl());
                     intent.putExtra("dealTitle", dealTitle);
                     intent.putExtra("dealInfo", dealInfo);
+                    intent.putExtra("userLatitude", Double.toString(userLatitude));
+                    intent.putExtra("userLongitude", Double.toString(userLongitude));
+                    intent.putExtra("busLatitude", Double.toString(busLatitude));
+                    intent.putExtra("busLongitude", Double.toString(busLongitude));
 
                     startActivity(intent);
                 }
@@ -105,6 +113,25 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void run() {
+
+                //get location coordinates from intent passed to this activity
+                /*
+                Intent locationIntent = getIntent();
+                latitude = Double.parseDouble(locationIntent.getStringExtra("latitute"));
+                longitude = Double.parseDouble(locationIntent.getStringExtra("longitute"));
+                */
+                //40.743316, -74.182531 (UC location)  +- 0.06
+
+                userLatitude = 40.743316;
+                userLongitude = -74.182531;
+                double boundVar = 0.015;
+
+                BoundingBoxOptions bounds = BoundingBoxOptions.builder()
+                        .swLatitude(userLatitude - boundVar).swLongitude(userLongitude - boundVar)
+                        .neLatitude(userLatitude + boundVar).neLongitude(userLongitude + boundVar).build();
+
+
+
                 testTxt.setText("Running");
                 YelpAPIFactory apiFactory = new YelpAPIFactory("xK9j0pwr7D41XNvbLp6T-Q", "lMGEVb8SAgdDurSz93bTgfArM14",
                         "PVdMOZycbckRD5YZgcxITlbmek4uIo6Y", "GnuITPnq0sSZ4TRqbcAreYc81Oc");
@@ -113,10 +140,9 @@ public class MainActivity extends AppCompatActivity {
 
                 Map<String, String> params = new HashMap<String, String>();
                 params.put("term", "food");
-                //params.put("limit", "3");
                 params.put("deals_filter", "true");
 
-                Call<SearchResponse> call = yelpAPI.search("San Francisco", params);
+                Call<SearchResponse> call = yelpAPI.search(bounds, params);
 
                 try {
                     response = call.execute();
