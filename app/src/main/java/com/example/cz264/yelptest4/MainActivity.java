@@ -60,6 +60,8 @@ public class MainActivity extends AppCompatActivity {
         testTxt = (TextView) findViewById(R.id.testTxt2);
 
         testBt = (Button) findViewById(R.id.testBt);
+
+
         testBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -124,6 +126,9 @@ public class MainActivity extends AppCompatActivity {
 
                 userLatitude = 40.743316;
                 userLongitude = -74.182531;
+
+
+
                 double boundVar = 0.015;
 
                 BoundingBoxOptions bounds = BoundingBoxOptions.builder()
