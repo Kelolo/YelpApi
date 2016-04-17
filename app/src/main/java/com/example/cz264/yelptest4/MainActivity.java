@@ -123,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
                 longitude = Double.parseDouble(locationIntent.getStringExtra("longitute"));
                 */
                 //40.743316, -74.182531 (UC location)  +- 0.06
-
+                //sss
                 userLatitude = 40.743316;
                 userLongitude = -74.182531;
 
