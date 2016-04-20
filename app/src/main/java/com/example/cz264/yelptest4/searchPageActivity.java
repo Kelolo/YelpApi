@@ -8,6 +8,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -39,8 +40,10 @@ public class searchPageActivity extends AppCompatActivity {
         TextView dealInfoTv = (TextView)findViewById(R.id.dealInfo);
         TextView ratingTv = (TextView)findViewById(R.id.ratingTv);
         TextView dealLink = (TextView)findViewById(R.id.dealLink);
+        dealLink.setClickable(true);
         dealLink.setMovementMethod(LinkMovementMethod.getInstance());
-
+        String dealLinkTxt = "<a href='http://www.yelp.com/mobile?source=deal_marketing'>Get it NOW!</a>";
+        dealLink.setText(Html.fromHtml(dealLinkTxt));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Intent intent = getIntent();
@@ -60,13 +63,12 @@ public class searchPageActivity extends AppCompatActivity {
         DecimalFormat df2 = new DecimalFormat("#.0");
         distTv.setText("Distance: " + df2.format(dist) + "m");
 
-        String[] spliter = dealInfo.split("<");
+        String[] spliter = dealInfo.split("Print");
 
         business_TitleTv.setText(name);
         dealTitleTv.setText(dealTitle);
         dealInfoTv.setText(spliter[0]);
 
-        dealLink.setText("<"+spliter[1]+"</a>");
         ratingTv.setText("Rating: " + rating);
 
         final WebView business_ImageWv = (WebView)findViewById(R.id.business_Image);
